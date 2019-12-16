@@ -2101,7 +2101,7 @@
 
   var _default = _publisher.default.extend({
     name: (0, _attr.default)(),
-    bio: (0, _attr.default)(),
+    biography: (0, _attr.default)(),
     books: (0, _relationships.hasMany)(),
     onDidLoad: Ember.on('didLoad', function () {
       this.set('loadedAt', new Date());
@@ -2559,8 +2559,8 @@
   _exports.default = void 0;
 
   var _default = Ember.HTMLBars.template({
-    "id": "WNSAkRnk",
-    "block": "{\"symbols\":[\"book\"],\"statements\":[[7,\"div\",true],[10,\"class\",\"author\"],[8],[0,\"\\n  \"],[7,\"h1\",true],[8],[1,[24,[\"model\",\"name\"]],false],[9],[0,\"\\n  \"],[1,[22,\"paper-divider\"],false],[0,\"\\n  \"],[7,\"br\",true],[8],[9],[0,\"\\n  \"],[7,\"p\",true],[8],[7,\"strong\",true],[8],[0,\"Biography\"],[9],[0,\":\"],[9],[0,\"\\n  \"],[7,\"div\",true],[10,\"class\",\"biography\"],[8],[0,\"\\n    \"],[1,[28,\"markdown-to-html\",[[24,[\"model\",\"bio\"]]],null],false],[0,\"\\n  \"],[9],[0,\"\\n\\n  \"],[7,\"br\",true],[8],[9],[0,\"\\n  \"],[7,\"h4\",true],[8],[0,\"Published titles:\"],[9],[0,\"\\n  \"],[7,\"div\",true],[10,\"class\",\"layout-row layout-wrap layout-xs-column\"],[8],[0,\"\\n\"],[4,\"each\",[[24,[\"model\",\"books\"]]],null,{\"statements\":[[0,\"      \"],[1,[28,\"book-cover\",null,[[\"book\",\"blurBackground\"],[[23,1,[]],[28,\"route-action\",[\"blurBackground\"],null]]]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[9],[0,\"\\n\"],[9]],\"hasEval\":false}",
+    "id": "+yH3aD4R",
+    "block": "{\"symbols\":[\"book\"],\"statements\":[[7,\"div\",true],[10,\"class\",\"author\"],[8],[0,\"\\n  \"],[7,\"h1\",true],[8],[1,[24,[\"model\",\"name\"]],false],[9],[0,\"\\n  \"],[1,[22,\"paper-divider\"],false],[0,\"\\n  \"],[7,\"br\",true],[8],[9],[0,\"\\n  \"],[7,\"p\",true],[8],[7,\"strong\",true],[8],[0,\"Biography\"],[9],[0,\":\"],[9],[0,\"\\n  \"],[7,\"div\",true],[10,\"class\",\"biography\"],[8],[0,\"\\n    \"],[1,[28,\"markdown-to-html\",[[24,[\"model\",\"biography\"]]],null],false],[0,\"\\n  \"],[9],[0,\"\\n\\n  \"],[7,\"br\",true],[8],[9],[0,\"\\n  \"],[7,\"h4\",true],[8],[0,\"Published titles:\"],[9],[0,\"\\n  \"],[7,\"div\",true],[10,\"class\",\"layout-row layout-wrap layout-xs-column\"],[8],[0,\"\\n\"],[4,\"each\",[[24,[\"model\",\"books\"]]],null,{\"statements\":[[0,\"      \"],[1,[28,\"book-cover\",null,[[\"book\",\"blurBackground\"],[[23,1,[]],[28,\"route-action\",[\"blurBackground\"],null]]]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[9],[0,\"\\n\"],[9]],\"hasEval\":false}",
     "meta": {
       "moduleName": "bookstore/templates/author.hbs"
     }
@@ -2692,7 +2692,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("bookstore/app")["default"].create({"name":"bookstore","version":"0.0.0+beacb79a"});
+            require("bookstore/app")["default"].create({"name":"bookstore","version":"0.0.0+05e1b159"});
           }
         
 //# sourceMappingURL=bookstore.map
