@@ -5,6 +5,7 @@ import { on } from '@ember/object/evented';
 
 export default Publisher.extend({
   name: attr(),
+  bio: attr(),
   books: hasMany(),
 
   onDidLoad: on('didLoad', function() {
