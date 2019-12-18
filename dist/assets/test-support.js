@@ -14041,6 +14041,95 @@ define("@ember/test-helpers/wait-until", ["exports", "@ember/test-helpers/-utils
     });
   }
 });
+define("ember-basic-dropdown/test-support/helpers", ["exports", "@ember/test-helpers"], function (_exports, _testHelpers) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.nativeTap = nativeTap;
+  _exports.clickTrigger = clickTrigger;
+  _exports.tapTrigger = tapTrigger;
+  _exports.fireKeydown = fireKeydown;
+  _exports.default = _default;
+
+  function nativeTap(selector, options = {}) {
+    let touchStartEvent = new window.Event('touchstart', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+    Object.keys(options).forEach(key => touchStartEvent[key] = options[key]);
+    Ember.run(() => document.querySelector(selector).dispatchEvent(touchStartEvent));
+    let touchEndEvent = new window.Event('touchend', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+    Object.keys(options).forEach(key => touchEndEvent[key] = options[key]);
+    Ember.run(() => document.querySelector(selector).dispatchEvent(touchEndEvent));
+  }
+
+  function clickTrigger(scope, options = {}) {
+    let selector = '.ember-basic-dropdown-trigger';
+
+    if (scope) {
+      let element = document.querySelector(scope);
+
+      if (element.classList.contains('ember-basic-dropdown-trigger')) {
+        selector = scope;
+      } else {
+        selector = scope + ' ' + selector;
+      }
+    }
+
+    (0, _testHelpers.click)(selector, options);
+    return (0, _testHelpers.settled)();
+  }
+
+  function tapTrigger(scope, options = {}) {
+    let selector = '.ember-basic-dropdown-trigger';
+
+    if (scope) {
+      selector = scope + ' ' + selector;
+    }
+
+    nativeTap(selector, options);
+  }
+
+  function fireKeydown(selector, k) {
+    let oEvent = document.createEvent('Events');
+    oEvent.initEvent('keydown', true, true);
+    Ember.merge(oEvent, {
+      view: window,
+      ctrlKey: false,
+      altKey: false,
+      shiftKey: false,
+      metaKey: false,
+      keyCode: k,
+      charCode: k
+    });
+    Ember.run(() => document.querySelector(selector).dispatchEvent(oEvent));
+  } // acceptance helpers
+
+
+  function _default() {
+    Ember.Test.registerAsyncHelper('clickDropdown', function (app, cssPath, options = {}) {
+      (true && !(false) && Ember.deprecate('Using the global `clickDropdown` acceptance helper from ember-basic-dropdown is deprecated. Please, explicitly import the `clickTrigger` or just use `click` helper from `@ember/test-helpers`.', false, {
+        until: '1.0.0',
+        id: 'ember-basic-dropdown-click-dropdown'
+      }));
+      clickTrigger(cssPath, options);
+    });
+    Ember.Test.registerAsyncHelper('tapDropdown', function (app, cssPath, options = {}) {
+      (true && !(false) && Ember.deprecate('Using the global `tapDropdown` acceptance helper from ember-basic-dropdown is deprecated. Please, explicitly import the `tapTrigger` or just use `tap` helper from `@ember/test-helpers`.', false, {
+        until: '1.0.0',
+        id: 'ember-basic-dropdown-click-dropdown'
+      }));
+      tapTrigger(cssPath, options);
+    });
+  }
+});
 define('ember-cli-test-loader/test-support/index', ['exports'], function (exports) {
   /* globals requirejs, require */
   "use strict";
@@ -14137,6 +14226,284 @@ define('ember-cli-test-loader/test-support/index', ['exports'], function (export
     }
   }exports.default = TestLoader;
   ;
+});
+define("ember-power-select/test-support/helpers", ["exports", "@ember/test-helpers", "ember-power-select/test-support/index"], function (_exports, _testHelpers, _index) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.findContains = findContains;
+  _exports.nativeMouseDown = nativeMouseDown;
+  _exports.nativeMouseUp = nativeMouseUp;
+  _exports.triggerKeydown = triggerKeydown;
+  _exports.typeInSearch = typeInSearch;
+  _exports.clickTrigger = clickTrigger;
+  _exports.nativeTouch = nativeTouch;
+  _exports.touchTrigger = touchTrigger;
+  _exports.selectChoose = selectChoose;
+  _exports.selectSearch = selectSearch;
+  _exports.removeMultipleOption = removeMultipleOption;
+  _exports.clearSelected = clearSelected;
+  _exports.default = _default;
+
+  /**
+   * @private
+   * @param {String} selector CSS3 selector of the elements to check the content
+   * @param {String} text Substring that the selected element must contain
+   * @returns HTMLElement The first element that maches the given selector and contains the
+   *                      given text
+   */
+  function findContains(selector, text) {
+    return [].slice.apply(document.querySelectorAll(selector)).filter(e => {
+      return e.textContent.trim().indexOf(text) > -1;
+    })[0];
+  }
+
+  async function nativeMouseDown(selectorOrDomElement, options) {
+    return (0, _testHelpers.triggerEvent)(selectorOrDomElement, 'mousedown', options);
+  }
+
+  async function nativeMouseUp(selectorOrDomElement, options) {
+    return (0, _testHelpers.triggerEvent)(selectorOrDomElement, 'mouseup', options);
+  }
+
+  async function triggerKeydown(domElement, k) {
+    return (0, _testHelpers.triggerKeyEvent)(domElement, 'keydown', k);
+  }
+
+  function typeInSearch(scopeOrText, text) {
+    let scope = '';
+
+    if (typeof text === 'undefined') {
+      text = scopeOrText;
+    } else {
+      scope = scopeOrText;
+    }
+
+    let selectors = ['.ember-power-select-search-input', '.ember-power-select-search input', '.ember-power-select-trigger-multiple-input', 'input[type="search"]'].map(selector => `${scope} ${selector}`).join(', ');
+    return (0, _testHelpers.fillIn)(selectors, text);
+  }
+
+  async function clickTrigger(scope, options = {}) {
+    let selector = '.ember-power-select-trigger';
+
+    if (scope) {
+      selector = `${scope} ${selector}`;
+    }
+
+    return (0, _testHelpers.click)(selector, options);
+  }
+
+  async function nativeTouch(selectorOrDomElement) {
+    (0, _testHelpers.triggerEvent)(selectorOrDomElement, 'touchstart');
+    return (0, _testHelpers.triggerEvent)(selectorOrDomElement, 'touchend');
+  }
+
+  async function touchTrigger() {
+    return nativeTouch('.ember-power-select-trigger');
+  }
+
+  async function selectChoose(cssPathOrTrigger, valueOrSelector, optionIndex) {
+    return (0, _index.selectChoose)(cssPathOrTrigger, valueOrSelector, optionIndex);
+  }
+
+  async function selectSearch(cssPathOrTrigger, value) {
+    return (0, _index.selectSearch)(cssPathOrTrigger, value);
+  }
+
+  async function removeMultipleOption(cssPath, value) {
+    return (0, _index.removeMultipleOption)(cssPath, value);
+  }
+
+  async function clearSelected(cssPath) {
+    return (0, _index.clearSelected)(cssPath);
+  } // Helpers for acceptance tests
+
+
+  function _default() {
+    Ember.Test.registerAsyncHelper('selectChoose', function (_, cssPathOrTrigger, valueOrSelector, optionIndex) {
+      (true && !(true) && Ember.deprecate('Using the implicit global async helper `selectChoose` is deprecated. Please, import it explicitly with `import { selectChoose } from "ember-power-select/test-support"`', true, {
+        id: 'ember-power-select-global-select-choose',
+        until: '2.0.0'
+      }));
+      return (0, _index.selectChoose)(cssPathOrTrigger, valueOrSelector, optionIndex);
+    });
+    Ember.Test.registerAsyncHelper('selectSearch', async function (app, cssPathOrTrigger, value) {
+      (true && !(true) && Ember.deprecate('Using the implicit global async helper `selectSearch` is deprecated. Please, import it explicitly with `import { selectSearch } from "ember-power-select/test-support"`', true, {
+        id: 'ember-power-select-global-select-search',
+        until: '2.0.0'
+      }));
+      return (0, _index.selectSearch)(cssPathOrTrigger, value);
+    });
+    Ember.Test.registerAsyncHelper('removeMultipleOption', async function (app, cssPath, value) {
+      (true && !(true) && Ember.deprecate('Using the implicit global async helper `removeMultipleOption` is deprecated. Please, import it explicitly with `import { removeMultipleOption } from "ember-power-select/test-support"`', true, {
+        id: 'ember-power-select-global-remove-multiple-option',
+        until: '2.0.0'
+      }));
+      return (0, _index.removeMultipleOption)(cssPath, value);
+    });
+    Ember.Test.registerAsyncHelper('clearSelected', async function (app, cssPath) {
+      (true && !(true) && Ember.deprecate('Using the implicit global async helper `clearSelected` is deprecated. Please, import it explicitly with `import { clearSelected } from "ember-power-select/test-support"`', true, {
+        id: 'ember-power-select-global-clear-selected',
+        until: '2.0.0'
+      }));
+      return (0, _index.clearSelected)(cssPath);
+    });
+  }
+});
+define("ember-power-select/test-support/index", ["exports", "@ember/test-helpers"], function (_exports, _testHelpers) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.selectChoose = selectChoose;
+  _exports.selectSearch = selectSearch;
+  _exports.removeMultipleOption = removeMultipleOption;
+  _exports.clearSelected = clearSelected;
+
+  async function openIfClosedAndGetContentId(trigger) {
+    let contentId = trigger.attributes['aria-owns'] && `${trigger.attributes['aria-owns'].value}`;
+    let content = contentId ? document.querySelector(`#${contentId}`) : undefined; // If the dropdown is closed, open it
+
+    if (!content || content.classList.contains('ember-basic-dropdown-content-placeholder')) {
+      await (0, _testHelpers.click)(trigger);
+      await (0, _testHelpers.settled)();
+      contentId = `${trigger.attributes['aria-owns'].value}`;
+    }
+
+    return contentId;
+  }
+
+  async function selectChoose(cssPathOrTrigger, valueOrSelector, optionIndex) {
+    let trigger, target;
+
+    if (cssPathOrTrigger instanceof HTMLElement) {
+      if (cssPathOrTrigger.classList.contains('ember-power-select-trigger')) {
+        trigger = cssPathOrTrigger;
+      } else {
+        trigger = cssPathOrTrigger.querySelector('.ember-power-select-trigger');
+      }
+    } else {
+      trigger = document.querySelector(`${cssPathOrTrigger} .ember-power-select-trigger`);
+
+      if (!trigger) {
+        trigger = document.querySelector(cssPathOrTrigger);
+      }
+
+      if (!trigger) {
+        throw new Error(`You called "selectChoose('${cssPathOrTrigger}', '${valueOrSelector}')" but no select was found using selector "${cssPathOrTrigger}"`);
+      }
+    }
+
+    if (trigger.scrollIntoView) {
+      trigger.scrollIntoView();
+    }
+
+    let contentId = await openIfClosedAndGetContentId(trigger); // Select the option with the given text
+
+    let options = document.querySelectorAll(`#${contentId} .ember-power-select-option`);
+    let potentialTargets = [].slice.apply(options).filter(opt => opt.textContent.indexOf(valueOrSelector) > -1);
+
+    if (potentialTargets.length === 0) {
+      potentialTargets = document.querySelectorAll(`#${contentId} ${valueOrSelector}`);
+    }
+
+    if (potentialTargets.length > 1) {
+      let filteredTargets = [].slice.apply(potentialTargets).filter(t => t.textContent.trim() === valueOrSelector);
+
+      if (optionIndex === undefined) {
+        target = filteredTargets[0] || potentialTargets[0];
+      } else {
+        target = filteredTargets[optionIndex] || potentialTargets[optionIndex];
+      }
+    } else {
+      target = potentialTargets[0];
+    }
+
+    if (!target) {
+      throw new Error(`You called "selectChoose('${cssPathOrTrigger}', '${valueOrSelector}')" but "${valueOrSelector}" didn't match any option`);
+    }
+
+    await (0, _testHelpers.click)(target);
+    return (0, _testHelpers.settled)();
+  }
+
+  async function selectSearch(cssPathOrTrigger, value) {
+    let trigger;
+
+    if (cssPathOrTrigger instanceof HTMLElement) {
+      trigger = cssPathOrTrigger;
+    } else {
+      let triggerPath = `${cssPathOrTrigger} .ember-power-select-trigger`;
+      trigger = document.querySelector(triggerPath);
+
+      if (!trigger) {
+        triggerPath = cssPathOrTrigger;
+        trigger = document.querySelector(triggerPath);
+      }
+
+      if (!trigger) {
+        throw new Error(`You called "selectSearch('${cssPathOrTrigger}', '${value}')" but no select was found using selector "${cssPathOrTrigger}"`);
+      }
+    }
+
+    if (trigger.scrollIntoView) {
+      trigger.scrollIntoView();
+    }
+
+    let isMultipleSelect = !!trigger.querySelector('.ember-power-select-trigger-multiple-input');
+    let contentId = await openIfClosedAndGetContentId(trigger);
+    let isDefaultSingleSelect = !!document.querySelector('.ember-power-select-search-input');
+
+    if (isMultipleSelect) {
+      await (0, _testHelpers.fillIn)(trigger.querySelector('.ember-power-select-trigger-multiple-input'), value);
+    } else if (isDefaultSingleSelect) {
+      await (0, _testHelpers.fillIn)('.ember-power-select-search-input', value);
+    } else {
+      // It's probably a customized version
+      let inputIsInTrigger = !!trigger.querySelector('.ember-power-select-trigger input[type=search]');
+
+      if (inputIsInTrigger) {
+        await (0, _testHelpers.fillIn)(trigger.querySelector('input[type=search]'), value);
+      } else {
+        await (0, _testHelpers.fillIn)(`#${contentId} .ember-power-select-search-input[type=search]`, 'input');
+      }
+    }
+
+    return (0, _testHelpers.settled)();
+  }
+
+  async function removeMultipleOption(cssPath, value) {
+    let elem;
+    let items = document.querySelectorAll(`${cssPath} .ember-power-select-multiple-options > li`);
+    let item = [].slice.apply(items).find(el => el.textContent.indexOf(value) > -1);
+
+    if (item) {
+      elem = item.querySelector('.ember-power-select-multiple-remove-btn');
+    }
+
+    try {
+      await (0, _testHelpers.click)(elem);
+      return (0, _testHelpers.settled)();
+    } catch (e) {
+      (true && Ember.warn('css path to remove btn not found'));
+      throw e;
+    }
+  }
+
+  async function clearSelected(cssPath) {
+    let elem = document.querySelector(`${cssPath} .ember-power-select-clear-btn`);
+
+    try {
+      await (0, _testHelpers.click)(elem);
+      return (0, _testHelpers.settled)();
+    } catch (e) {
+      (true && Ember.warn('css path to clear btn not found'));
+      throw e;
+    }
+  }
 });
 define("ember-qunit/adapter", ["exports", "qunit", "@ember/test-helpers/has-ember-version"], function (_exports, _qunit, _hasEmberVersion) {
   "use strict";
@@ -16255,36 +16622,36 @@ var __ember_auto_import__ =
 /************************************************************************/
 /******/ ({
 
-/***/ "../../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js":
-/*!**************************************************************************************************************************!*\
-  !*** /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js ***!
-  \**************************************************************************************************************************/
+/***/ "../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js":
+/*!*************************************************************************************************************************!*\
+  !*** /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js ***!
+  \*************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("\nwindow._eai_r = require;\nwindow._eai_d = define;\n\n\n//# sourceURL=webpack://__ember_auto_import__//private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js?");
+eval("\nwindow._eai_r = require;\nwindow._eai_d = define;\n\n\n//# sourceURL=webpack://__ember_auto_import__//private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js?");
 
 /***/ }),
 
-/***/ "../../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js":
-/*!******************************************************************************************************************************!*\
-  !*** /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js ***!
-  \******************************************************************************************************************************/
+/***/ "../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js":
+/*!*****************************************************************************************************************************!*\
+  !*** /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js ***!
+  \*****************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("\nif (typeof document !== 'undefined') {\n  __webpack_require__.p = (function(){\n    var scripts = document.querySelectorAll('script');\n    return scripts[scripts.length - 1].src.replace(/\\/[^/]*$/, '/');\n  })();\n}\n\nmodule.exports = (function(){\n  var d = _eai_d;\n  var r = _eai_r;\n  window.emberAutoImportDynamic = function(specifier) {\n    return r('_eai_dyn_' + specifier);\n  };\n})();\n\n\n//# sourceURL=webpack://__ember_auto_import__//private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js?");
+eval("\nif (typeof document !== 'undefined') {\n  __webpack_require__.p = (function(){\n    var scripts = document.querySelectorAll('script');\n    return scripts[scripts.length - 1].src.replace(/\\/[^/]*$/, '/');\n  })();\n}\n\nmodule.exports = (function(){\n  var d = _eai_d;\n  var r = _eai_r;\n  window.emberAutoImportDynamic = function(specifier) {\n    return r('_eai_dyn_' + specifier);\n  };\n})();\n\n\n//# sourceURL=webpack://__ember_auto_import__//private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js?");
 
 /***/ }),
 
 /***/ 1:
-/*!*******************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js ***!
-  \*******************************************************************************************************************************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("__webpack_require__(/*! /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js */\"../../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js\");\nmodule.exports = __webpack_require__(/*! /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js */\"../../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js\");\n\n\n//# sourceURL=webpack://__ember_auto_import__/multi_/private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/l.js_/private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-13351iHNiSEzyHhU3/cache-263-bundler/staging/tests.js?");
+eval("__webpack_require__(/*! /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js */\"../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js\");\nmodule.exports = __webpack_require__(/*! /private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js */\"../../../../../private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js\");\n\n\n//# sourceURL=webpack://__ember_auto_import__/multi_/private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/l.js_/private/var/folders/m0/lg92sjhs1n9c771t98d88kw80000gn/T/broccoli-5937HbbqQYge1SQk/cache-366-bundler/staging/tests.js?");
 
 /***/ })
 

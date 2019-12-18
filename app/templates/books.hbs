@@ -1,9 +1,9 @@
-<ul>
+<div class="layout-row layout-wrap layout-xs-column">
   {{#each model as |book|}}
     {{book-cover book=book blurBackground=(route-action "blurBackground")}}
   {{/each}}
-</ul>
+</div>
 
 {{#if showAll}}
-  <button {{action 'showAll'}}>Show All</button>
+  <button class="md-button" {{action "showAll"}}>Show All</button>
 {{/if}}

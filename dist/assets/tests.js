@@ -1,5 +1,51 @@
 'use strict';
 
+define("bookstore/tests/helpers/ember-power-select", ["exports", "ember-power-select/test-support/helpers"], function (_exports, _helpers) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = deprecatedRegisterHelpers;
+  _exports.selectChoose = _exports.touchTrigger = _exports.nativeTouch = _exports.clickTrigger = _exports.typeInSearch = _exports.triggerKeydown = _exports.nativeMouseUp = _exports.nativeMouseDown = _exports.findContains = void 0;
+
+  function deprecateHelper(fn, name) {
+    return function (...args) {
+      (true && !(false) && Ember.deprecate(`DEPRECATED \`import { ${name} } from '../../tests/helpers/ember-power-select';\` is deprecated. Please, replace it with \`import { ${name} } from 'ember-power-select/test-support/helpers';\``, false, {
+        until: '1.11.0',
+        id: `ember-power-select-test-support-${name}`
+      }));
+      return fn(...args);
+    };
+  }
+
+  let findContains = deprecateHelper(_helpers.findContains, 'findContains');
+  _exports.findContains = findContains;
+  let nativeMouseDown = deprecateHelper(_helpers.nativeMouseDown, 'nativeMouseDown');
+  _exports.nativeMouseDown = nativeMouseDown;
+  let nativeMouseUp = deprecateHelper(_helpers.nativeMouseUp, 'nativeMouseUp');
+  _exports.nativeMouseUp = nativeMouseUp;
+  let triggerKeydown = deprecateHelper(_helpers.triggerKeydown, 'triggerKeydown');
+  _exports.triggerKeydown = triggerKeydown;
+  let typeInSearch = deprecateHelper(_helpers.typeInSearch, 'typeInSearch');
+  _exports.typeInSearch = typeInSearch;
+  let clickTrigger = deprecateHelper(_helpers.clickTrigger, 'clickTrigger');
+  _exports.clickTrigger = clickTrigger;
+  let nativeTouch = deprecateHelper(_helpers.nativeTouch, 'nativeTouch');
+  _exports.nativeTouch = nativeTouch;
+  let touchTrigger = deprecateHelper(_helpers.touchTrigger, 'touchTrigger');
+  _exports.touchTrigger = touchTrigger;
+  let selectChoose = deprecateHelper(_helpers.selectChoose, 'selectChoose');
+  _exports.selectChoose = selectChoose;
+
+  function deprecatedRegisterHelpers() {
+    (true && !(false) && Ember.deprecate("DEPRECATED `import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';` is deprecated. Please, replace it with `import registerPowerSelectHelpers from 'ember-power-select/test-support/helpers';`", false, {
+      until: '1.11.0',
+      id: 'ember-power-select-test-support-register-helpers'
+    }));
+    return (0, _helpers.default)();
+  }
+});
 define("bookstore/tests/integration/components/book-cover-test", ["qunit", "ember-qunit", "@ember/test-helpers"], function (_qunit, _emberQunit, _testHelpers) {
   "use strict";
 
@@ -42,7 +88,7 @@ define("bookstore/tests/lint/app.lint-test", [], function () {
   QUnit.module('ESLint | app');
   QUnit.test('adapters/author.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'adapters/author.js should pass ESLint\n\n11:5 - Unexpected console statement. (no-console)');
+    assert.ok(true, 'adapters/author.js should pass ESLint\n\n');
   });
   QUnit.test('app.js', function (assert) {
     assert.expect(1);
@@ -99,19 +145,19 @@ define("bookstore/tests/lint/templates.template.lint-test", [], function () {
   QUnit.module('TemplateLint');
   QUnit.test('bookstore/templates/application.hbs', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'bookstore/templates/application.hbs should pass TemplateLint.\n\nbookstore/templates/application.hbs\n  5:11  error  Unnecessary string concatenation. Use {{if blur \'blur-background\'}} instead of "{{if blur \'blur-background\'}}".  no-unnecessary-concat\n  2:36  error  you must use double quotes in templates  quotes\n  5:22  error  you must use double quotes in templates  quotes\n');
+    assert.ok(true, 'bookstore/templates/application.hbs should pass TemplateLint.\n\n');
   });
   QUnit.test('bookstore/templates/author.hbs', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'bookstore/templates/author.hbs should pass TemplateLint.\n\nbookstore/templates/author.hbs\n  7:0  error  Incorrect indentation for `{{#each}}` beginning at L7:C0. Expected `{{#each}}` to be at an indentation of 2 but was found at 0.  block-indentation\n');
+    assert.ok(true, 'bookstore/templates/author.hbs should pass TemplateLint.\n\n');
   });
   QUnit.test('bookstore/templates/books.hbs', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'bookstore/templates/books.hbs should pass TemplateLint.\n\nbookstore/templates/books.hbs\n  8:19  error  you must use double quotes in templates  quotes\n');
+    assert.ok(true, 'bookstore/templates/books.hbs should pass TemplateLint.\n\n');
   });
   QUnit.test('bookstore/templates/components/book-cover.hbs', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'bookstore/templates/components/book-cover.hbs should pass TemplateLint.\n\nbookstore/templates/components/book-cover.hbs\n  1:4  error  Interaction added to non-interactive element  no-invalid-interactive\n  4:29  error  you must use double quotes in templates  quotes\n  8:34  error  you must use double quotes in templates  quotes\n');
+    assert.ok(true, 'bookstore/templates/components/book-cover.hbs should pass TemplateLint.\n\n');
   });
 });
 define("bookstore/tests/lint/tests.lint-test", [], function () {

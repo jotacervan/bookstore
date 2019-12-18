@@ -1,25 +1,34 @@
-<li {{action "open"}}>
-  <strong>{{book.title}}</strong><br><br>
-  <em>by</em>
-  {{link-to book.author.name 'author' book.author.id class="author" }}
-</li>
+{{#paper-card class="book" as |card|}}
+  {{#card.title as |title|}}
+    {{#title.text as |text|}}
+      {{#text.headline class="book-title"}}{{book.title}}{{/text.headline}}
+      {{#text.subhead}}<em>by</em> {{book.author.name}}{{/text.subhead}}
+    {{/title.text}}
+  {{/card.title}}
+  {{#card.actions}}
+    {{#paper-button href=( concat "/authors/" book.author.id) }}Author Bio{{/paper-button}}
+    {{#paper-button onClick=(action "open") }}Buy{{/paper-button}}
+  {{/card.actions}}
+{{/paper-card}}
 
 {{#if isShowingModal}}
-  {{#modal-dialog onClose=(action 'close') clickOutsideToClose=true}}
+  {{#paper-dialog class="flex-77" onClose=(action "close") origin=dialogOrigin clickOutsideToClose=true}}
+    {{#paper-toolbar}}
+      {{#paper-toolbar-tools}}
+        <h2>Purchase confirmation</h2>
+        <span class="flex"></span>
+        {{#paper-button iconButton=true onClick=(action "close")}}{{paper-icon icon="close"}}{{/paper-button}}
+      {{/paper-toolbar-tools}}
+    {{/paper-toolbar}}
 
-    <div class="modal">
-      <h3>Purchase confirmation</h3>
-      You want to buy <strong>{{book.title}}</strong> by {{book.author.name}}.
+    {{#paper-dialog-content}}
+      <p>You want to buy <strong>{{book.title}}</strong> by {{book.author.name}}.</p>
+      <br>
+      <em>Thank you! We will e-mail you your e-book</em>
+    {{/paper-dialog-content}}
 
-      <p>
-        <button {{action "close"}}>Purchase for ${{book.price}}!</button>
-      </p>
-
-      <p>
-        <em>Thank you! We will e-mail you your e-book</em>
-      </p>
-
-    </div>
-
-  {{/modal-dialog}}
+    {{#paper-dialog-actions class="layout-row"}}
+      {{#paper-button primary=true onClick=(action "close")}}Purchase for ${{book.price}}!{{/paper-button}}
+    {{/paper-dialog-actions}}
+  {{/paper-dialog}}
 {{/if}}
