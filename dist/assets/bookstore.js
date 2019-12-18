@@ -2692,7 +2692,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("bookstore/app")["default"].create({"name":"bookstore","version":"0.0.0+05e1b159"});
+            require("bookstore/app")["default"].create({"name":"bookstore","version":"0.0.0+89e7593f"});
           }
         
 //# sourceMappingURL=bookstore.map
